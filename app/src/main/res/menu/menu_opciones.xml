@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+
+        android:id="@+id/ingresar_ingreso"
+        android:title="ingresar ingreso"
+        />
+    <item
+
+        android:id="@+id/ingresar_gasto"
+        android:title="ingresar gasto"
+        />
+    <item
+
+        android:id="@+id/ingresar_ahorro"
+        android:title="ingresar ahorro"
+
+        />
+</menu>
