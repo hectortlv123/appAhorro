@@ -1,50 +1,46 @@
-package com.hector.appahorro.repository
+package com.hector.appahorro.data.repository
 
-import androidx.core.os.trace
-import com.hector.appahorro.data.entity.Transaccion
-import com.hector.appahorro.data.entity.MetaAhorro
-import com.hector.appahorro.data.entity.Categoria
-
-import com.hector.appahorro.data.dao.TransaccionDao
-import com.hector.appahorro.data.dao.MetaAhorroDao
+import androidx.lifecycle.LiveData
 import com.hector.appahorro.data.dao.CategoriaDao
-//repository hace el puente entre base de dato y viewmodel
-class AhorroRepository (
+import com.hector.appahorro.data.dao.MetaAhorroDao
+import com.hector.appahorro.data.dao.TransaccionDao
+import com.hector.appahorro.data.entity.Categoria
+import com.hector.appahorro.data.entity.MetaAhorro
+import com.hector.appahorro.data.entity.Transaccion
+
+class AhorroRepository(
     private val categoriaDao: CategoriaDao,
     private val metaAhorroDao: MetaAhorroDao,
     private val transaccionDao: TransaccionDao
-    ){
+) {
 
+    // --- Categorías ---
+    fun obtenerCategorias(): LiveData<List<Categoria>> = categoriaDao.obtenerCategorias()
+    suspend fun insertarCategoria(categoria: Categoria) = categoriaDao.insertar(categoria)
+    suspend fun actualizarCategoria(categoria: Categoria) = categoriaDao.actualizar(categoria)
+    suspend fun eliminarCategoria(categoria: Categoria) = categoriaDao.eliminar(categoria)
 
-    //categoria
-    suspend fun insertCategoria(categoria:Categoria){ //agrega una nueva categoria en la tabla categoria
-        categoriaDao.insertar(categoria)
+    // --- Metas de ahorro ---
+    fun obtenerMetas(): LiveData<List<MetaAhorro>> = metaAhorroDao.obtenerMetas()
+    fun obtenerMetaPorId(id: Int): LiveData<MetaAhorro> = metaAhorroDao.obtenerMetaPorId(id)
+    suspend fun insertarMeta(meta: MetaAhorro) = metaAhorroDao.insertar(meta)
+    suspend fun actualizarMeta(meta: MetaAhorro) = metaAhorroDao.actualizar(meta)
+    suspend fun eliminarMeta(meta: MetaAhorro) = metaAhorroDao.eliminar(meta)
 
-    }
+    // --- Transacciones ---
+    fun obtenerTransacciones(): LiveData<List<Transaccion>> = transaccionDao.obtenerTransacciones()
+    fun obtenerTransaccionesPorMeta(idMeta: Int): LiveData<List<Transaccion>> =
+        transaccionDao.obtenerTransaccionesPorMeta(idMeta)
 
-    suspend fun obtenerCategorias(): List<Categoria>{ //llama a todas las categorias de la base de dato
-        return categoriaDao.obtenerTodas()
-    }
+    fun obtenerTotalIngresos(): LiveData<Double?> = transaccionDao.obtenerTotalIngresos()
+    fun obtenerTotalGastos(): LiveData<Double?> = transaccionDao.obtenerTotalGastos()
 
-    //metas de ahorro
-    suspend fun insertarMeta(meta: MetaAhorro){
-        metaAhorroDao.insertar(meta)
-    }
-    suspend fun obtenerMetas():List<MetaAhorro>{
-        return metaAhorroDao.obtenerTodas()
-    }
-    suspend fun agregarAhorro(idMeta: Int, cantidad: Double){ //suma cantidad + montoahorrado que sera por su id
-        metaAhorroDao.agregarAhorro(idMeta, cantidad)
-    }
-
-    //transacciones
-    suspend fun insertarTransaccion(transaccion:Transaccion){
+    suspend fun insertarTransaccion(transaccion: Transaccion) =
         transaccionDao.insertar(transaccion)
-    }
-    suspend fun obtenerTransacciones(): List<Transaccion>{
-        return transaccionDao.obtenerTodas()
-    }
-    suspend fun obtenerTransaccionPorCategoria(idCategoria: Int): List<Transaccion>{
-        return transaccionDao.obtenerPorCategoria(idCategoria)
-    }
+
+    suspend fun actualizarTransaccion(transaccion: Transaccion) =
+        transaccionDao.actualizar(transaccion)
+
+    suspend fun eliminarTransaccion(transaccion: Transaccion) =
+        transaccionDao.eliminar(transaccion)
 }
